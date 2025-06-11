@@ -1,0 +1,52 @@
+networks:
+    docker-ddd-test01-network:
+services:
+    php:
+        build:
+            context: .
+            dockerfile: ./php/Dockerfile
+        container_name: "docker-ddd-test01-php"
+        volumes:
+            - "./php/php.ini:/usr/local/etc/php/conf.d/php.ini"
+            - "..:/var/www/html"
+            - "./storage/public:/var/www/html/public/storage"
+        ports:
+            - "9999:9000"
+        networks:
+            - docker-ddd-test01-network
+    mysql:
+        image: mysql:8.0.41
+        platform: ${CPU_ARCH:-linux/x86_64} #linux/amd64
+        container_name: "docker-ddd-test01-mysql"
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "9306:3306"
+        volumes:
+            - ./mysql:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: "ddd-test01"
+            MYSQL_USER: "mahan"
+            MYSQL_PASSWORD: "mahan"
+            MYSQL_ROOT_USER: "root"
+            MYSQL_ROOT_PASSWORD: "docker"
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        networks:
+            - docker-ddd-test01-network
+    web:
+        image: nginx:stable-alpine
+        container_name: "docker-ddd-test01-nginx"
+        ports:
+            - "9080:80"
+        volumes:
+            - "..:/var/www/html"
+            - "./storage/public:/var/www/html/public/storage"
+            - "./nginx/default.conf:/etc/nginx/conf.d/default.conf"
+            - "./nginx/nginx.conf:/etc/nginx/nginx.conf"
+            - "../storage/logs/nginx:/var/log/nginx"
+        depends_on:
+            - php
+            - mysql
+        networks:
+            - docker-ddd-test01-network
