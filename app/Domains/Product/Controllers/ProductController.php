@@ -21,9 +21,11 @@ class ProductController extends Controller
 
         $this->service->createProduct($command);
 
-        return response()->json([
-            'message' => 'Successfully created product!',
-            201,
-        ]);
+        return response()->json(
+            [
+                'message' => 'Successfully created product!',
+            ],
+            201
+        );
     }
 }

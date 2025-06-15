@@ -6,7 +6,6 @@ use App\Domains\Product\Application\Commands\CreateProductCommand;
 use App\Domains\Product\Application\Services\ProductApplicationService;
 use App\Domains\Product\Entities\ProductEntity;
 use App\Domains\Product\Repositories\ProductRepositoryInterface;
-use App\Infrastructure\Product\Persistence\Eloquent\Models\Product;
 use Illuminate\Foundation\Testing\WithFaker;
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -14,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 class ProductApplicationServiceTest extends TestCase
 {
     use WithFaker;
+
     /**
      * A basic unit test example.
      */
